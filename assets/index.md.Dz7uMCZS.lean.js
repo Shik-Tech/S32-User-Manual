@@ -1,0 +1,1 @@
+import{_ as a,o as t,c as r,a3 as o}from"./chunks/framework.CCylkYel.js";const p=JSON.parse('{"title":"S32 User Manual","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),s={name:"index.md"};function n(i,e,d,c,h,l){return t(),r("div",null,[...e[0]||(e[0]=[o("",19)])])}const m=a(s,[["render",n]]);export{p as __pageData,m as default};
