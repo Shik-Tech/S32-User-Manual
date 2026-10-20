@@ -1,9 +1,9 @@
 {
-  "latest": "0.19.64",
+  "latest": "0.19.65",
   "versions": [
     {
-      "version": "0.19.64",
-      "label": "0.19.64 (latest)",
+      "version": "0.19.65",
+      "label": "0.19.65 (latest)",
       "path": "/"
     }
   ]
