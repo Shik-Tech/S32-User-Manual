@@ -1,0 +1,1 @@
+import{_ as a,o as t,c as r,a3 as o}from"./chunks/framework.Cv9hIvkJ.js";const u=JSON.parse('{"title":"S32 User Manual","description":"","frontmatter":{},"headers":[],"relativePath":"index.md","filePath":"index.md"}'),s={name:"index.md"};function n(i,e,d,h,l,c){return t(),r("div",null,[...e[0]||(e[0]=[o("",11)])])}const f=a(s,[["render",n]]);export{u as __pageData,f as default};
