@@ -8,11 +8,13 @@ Prompts to give an AI agent, with checked commands: [Prompts and examples](../ai
 
 ```text
 s32> list
-s32> pull internal 1 /tmp/p1.s32p
+s32> pull internal 1 /tmp/p1.s32p --force
 s32> push /tmp/p1.s32p
 s32> push /tmp/p1.s32p --activate
 s32> active
 ```
+
+`pull` does not replace a file unless you add `--force`.
 
 See [Push](./commands/projects.md#push).
 

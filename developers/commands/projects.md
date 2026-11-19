@@ -4,7 +4,8 @@
 s32 --loopback list
 s32 --loopback active
 s32 --loopback storage
-s32 --loopback pull internal 1 /tmp/p1.s32p
+# replaces /tmp/p1.s32p if it is there
+s32 --loopback pull internal 1 /tmp/p1.s32p --force
 s32 --loopback push /tmp/p1.s32p
 s32 --loopback push /tmp/p1.s32p --volume sd
 ```
@@ -18,7 +19,7 @@ s32 --loopback push /tmp/p1.s32p --volume sd
 | `list` | Every project on both volumes. `*` marks the one you are playing |
 | `active` | The project you are playing, and whether it has unsaved changes |
 | `storage` | Projects, capacity and free space per volume, in bytes, and the running job |
-| `pull VOLUME UID FILE.s32p` | Copies a project to a file and checks it. A damaged copy is not written |
+| `pull VOLUME UID FILE.s32p [--force]` | Copies a project to a file and checks it. A damaged copy is not written. An existing file is not replaced unless you add `--force` |
 | `push FILE.s32p [--volume internal\|sd] [--activate]` | Stores the file as a new project (default `internal`). `--activate` also loads it |
 | `project create VOLUME NAME [--seed empty\|daw]` | New project |
 | `project delete VOLUME UID` | |
@@ -28,7 +29,7 @@ s32 --loopback push /tmp/p1.s32p --volume sd
 | `project save [--wait]` | Saves the project you are playing in place. `--wait` returns once it is stored and prints `elapsed_ms` |
 | `project save-as VOLUME NAME [--activate] [--wait]` | Saves the project you are playing, unsaved changes included, as a new project |
 
-`push --activate`, `project delete` and `project load` [ask first](../connecting.md#usb). [`job`](./session.md) follows a save, load or copy. [`abort`](./session.md) stops a push.
+`pull --dry-run` checks the project and says whether the file would be created or replaced. `push --activate`, `project delete` and `project load` [ask first](../connecting.md#usb). [`job`](./session.md) follows a save, load or copy. [`abort`](./session.md) stops a push.
 
 ```bash
 s32 --loopback --yes project create internal Scratch --seed empty

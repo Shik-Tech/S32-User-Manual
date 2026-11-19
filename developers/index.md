@@ -4,7 +4,7 @@ The **s32 CLI** drives the S32 from a terminal or a script: pull and push projec
 
 | | |
 |---|---|
-| CLI | `s32` 1.3.46 |
+| CLI | `s32` 1.3.47 |
 | Protocol | 4 |
 | Firmware | the version in the site header |
 

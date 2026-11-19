@@ -19,7 +19,7 @@ s32 --loopback reset
 | `version` | s32 CLI and protocol versions. In a REPL, also the firmware |
 | `help [COMMAND]` | The overview, or the help of one command or group (same as `COMMAND --help`) |
 | `completion bash\|zsh` | A shell completion script on stdout. No S32 needed |
-| `commands` | Every command with its one-line summary. `commands --json` describes every command, key and example for programs. No S32 needed |
+| `commands` | Every command with its one-line summary. `commands --json` describes every command, key and example for programs, and marks service commands (`"service": true`), such as `reset`; scripts and AI agents should leave them to a person. `--dev` adds commands and values for hardware that is not released yet. No S32 needed |
 
 `s32 --version` needs no S32.
 
@@ -147,7 +147,7 @@ Within a CLI major version (`1.x.y`), a JSON key or error field is never renamed
 
 ## Preview before a change
 
-`--dry-run` works on every command that changes the S32. It checks the command exactly as the real run does, reads what it needs from the S32, prints the change it would make and exits 0. **It sends no write**, and it needs no `--yes` and does not prompt, even for `project delete`, `project load`, `push --activate`, `rack clear`, `rack duplicate`, `snapshot delete` and `globals set`.
+`--dry-run` works on every command that changes the S32, and on `pull`. It checks the command exactly as the real run does, reads what it needs from the S32, prints the change it would make and exits 0. **It sends no write**, and it needs no `--yes` and does not prompt, even for `project delete`, `project load`, `push --activate`, `rack clear`, `rack duplicate`, `snapshot delete` and `globals set`.
 
 ```bash
 s32 --loopback macro set 4 1 channel=3 msb=74 --dry-run
@@ -161,7 +161,7 @@ dry-run: s32 macro set 4 1 channel=3 msb=74 (nothing sent)
 
 - A key that keeps its value prints `msb: 0 (unchanged)`. A key that creates a row (`extmap add`, `lfo assign add`) prints `ch: (new) -> 1`.
 - A command that changes no named key prints one `  would …` sentence: `would permanently remove the stored project vol=0 uid=3 name=Project 3`, `would remove every device in rack 0 (id 100, 1 devices)`.
-- Wrong arguments, an unknown key or a project that does not exist fail with the same exit code and message as the real command. `--dry-run` on a command that does not change the S32 (`macro get`, `commands`) is a usage error.
+- Wrong arguments, an unknown key or a project that does not exist fail with the same exit code and message as the real command. `--dry-run` on any other command that does not change the S32 (`macro get`, `commands`) is a usage error.
 - With `--json` it prints one object: `{"dryRun":true,"command":"macro set","target":{"pot":4,"macro":1},"destructive":false,"changes":[{"key":"channel","from":"global","to":"3"}],"would":null}`. `from` and `to` are the words the CLI prints and accepts; `from` is `null` for a new row. `target` has one member per target argument you typed (a number when you typed a plain integer, otherwise a string).
 - `--dry-run` checks only what the CLI can check: the S32 can still refuse the real write. Its reads count against the S32's rate limit like any read.
 

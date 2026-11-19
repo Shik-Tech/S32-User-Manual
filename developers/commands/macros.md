@@ -41,7 +41,7 @@ s32 --loopback knobmap copy 3 9
 | `msb` | CC number, program number, NRPN/RPN MSB, note, … |
 | `lsb` | LSB, where the mode has one |
 | `channel` | `global` or `1`–`16` |
-| `min` / `max` | Range. 7-bit modes: `0`–`127`. `cc14`, `nrpn`, `rpn`, `pitch-bend`, `sysex`: `0`–`16383`. `mode=device`: the parameter's range, except a time that changes with SYNC (see below) |
+| `min` / `max` | Range. 7-bit modes: `0`–`127`. `cc14`, `nrpn`, `rpn`, `pitch-bend`, `sysex`: `0`–`16383`. `mode=rack` and `target=rack-bypass`: `0`–`1`. `target=snapshot-slot`: `1`–`32`. `target=morph-amount`: `0`–`16383`. `mode=s32-lfo`: the setting's range (`enabled`, `sync`, `rate`, `depth` `0`–`1`; `wave` `1`–`17`; `phase` `0`–`360`; `offset` `-1`–`1`). `mode=device`: the parameter's range, except a time that changes with SYNC (see below) |
 | `invert` | `on` / `off` |
 | `outputs` | `none`, `usb`, `out1`, `out2`, or a `+` mix such as `usb+out1` |
 | `pickup` | `on` / `off` |
@@ -50,6 +50,8 @@ s32 --loopback knobmap copy 3 9
 | `sub` | `mode=device` on a Step Seq step: the step, `0`–`15` |
 | `lfo` / `cvParam` | `mode=s32-lfo`: the LFO (from `0`) and its setting (`enabled`, `wave`, `rate`, `sync`, `phase`, `depth`, `offset`) |
 | `name` | The label for a named control |
+
+A rack, device or parameter that is not in the project exits `4` (`NotFound`) and changes nothing. Use the ids from `rack list` / `device list`, not positions, and a parameter that device has in `schema`.
 
 On a time that changes with SYNC (Delay `delay-time`, Arpeggiator `rate`, Envelope `attack` / `hold` / `decay` / `release`), `min` and `max` are positions from `0` to `1` of the range it has in its current mode: `min=0 max=1` is the whole range on SYNCED and on FREE, and `min=0.5 max=1` stays the upper half when SYNC changes. `macro get` prints the positions. A value above `1` is read in the current unit (ticks or ms) and stored as its position.
 
@@ -61,7 +63,18 @@ macro set 2 0 mode=s32-lfo lfo=0 cvParam=depth
 macro set 3 0 mode=disabled
 ```
 
-Switching into `cc14`, `nrpn`, `rpn`, `pitch-bend` or `sysex` without `min=`/`max=` sets the full 0–16383, as on the panel. For any other mode change, name `min=` and `max=` on the same line.
+Changing the mode, or picking a new target, without `min=`/`max=` gives the macro the full range of the new mode, as the panel does. A custom window such as CC `10`–`20` is dropped on `mode=pc` (`0`–`127`), `mode=cc14` (`0`–`16383`) or `mode=rack` (`0`–`1`). These keys also reset the range: `param=` in `mode=device` (the parameter's range), `cvParam=` in an LFO mode (that setting's range), `rack=` in `mode=rack` (`0`–`1`), and `part=` with `target=snapshot-slot` / `target=morph-amount`. Naming the value the macro already has changes nothing.
+
+These keys keep the window: `sub`, `rack` / `device` in `mode=device`, `channel`, `msb`, `lsb`, `invert`, `outputs`, `pickup`, `in`, `name`. In an LFO mode, an `lfo=` that changes the LFO index sets the LFO setting to `enabled` and its range `0`–`1`; with `cvParam=`, the setting you name decides. Naming the LFO index the macro already has changes nothing.
+
+Entering `mode=device` without `param=`:
+
+- A macro that already holds a complete device target (a rack, a device and a parameter, `bypass` included) keeps it, and the S32 gives it that parameter's range.
+- Any other macro (a fresh one, a Rack control, a snapshot or morph macro) leaves the target unset, with the range `0`–`127`. Name `rack=`, `device=` and `param=` to target a parameter.
+
+Entering `mode=s32-lfo` without `cvParam=` keeps the macro's LFO setting (`frequency` becomes `rate`, `amplitude` becomes `depth`, any setting an S32 LFO cannot target becomes `enabled`) with that setting's range.
+
+Name both `min=` and `max=` to set your own window on the same line. Naming one takes the other end from the new range (`mode=pc min=5` gives `5`–`127`). The exception is a device parameter, whose range only the S32 knows: there, naming one of the two exits `2` (`name both min= and max=, or neither, when the device parameter changes`) and changes nothing. `--dry-run` shows the range the line would set, `parameter-range` for a device parameter.
 
 `target=snapshot-slot` and `target=morph-amount` with `part=` turn a macro into a snapshot picker or a morph knob. See [Snapshots](./snapshots.md#mapping).
 

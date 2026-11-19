@@ -30,7 +30,7 @@ s32> rack set 1 bypass=on
 |---------|--------------|
 | `device list RACK` | Position, type, id and name of each device |
 | `device add RACK TYPE` | Adds a [device](/devices/) to the rack. `TYPE` is a name (`midi-in`, `midi-out`, `clock`, `arp`, `step-seq`, …) or its number from `schema` |
-| `device remove RACK DEV` | |
+| `device remove RACK DEV` | Removes the device. Its LFO assignments and external MIDI mappings are removed; a knob macro on it keeps its rack and shows SET TARGET. MIDI IN or CLOCK in first place stays while other devices are in the rack. |
 | `device move RACK FROM TO` | Reorders inside the rack. MIDI IN stays first, MIDI OUT last |
 | `device param get RACK DEV PARAM` | Value and range |
 | `device param set RACK DEV PARAM=VALUE [PARAM=VALUE …]` | One or more settings in one sentence. Rounded to a whole number and clamped to the range |

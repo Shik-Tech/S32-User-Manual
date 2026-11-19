@@ -2,9 +2,9 @@
 
 ```text
 s32 --loopback repl
-s32> extmap add ch=1 cc=20
+s32> extmap add ch=1 cc=20 target=lfo lfo=1 domain=s32 lfo-param=rate
 s32> extmap list
-s32> extmap set 0 ch=2 cc=21
+s32> extmap set 0 ch=2 cc=21 target=lfo lfo=1 domain=s32 lfo-param=rate
 s32> extmap remove 0
 s32> meta get
 s32> meta set bpm=137.5 description=Live-set-A
@@ -20,15 +20,15 @@ BYPASS or a snapshot control.
 | Command | What it does |
 |---------|--------------|
 | `extmap list` | Every row, with its target |
-| `extmap add ch=CH cc=CC` | Adds a row for that channel (1–16) and CC |
-| `extmap set INDEX ch=CH cc=CC` | Rewrites that row in place |
+| `extmap add ch=CH cc=CC target=…` | Adds a row for that channel (1–16) and CC. `target=` is required |
+| `extmap set INDEX ch=CH cc=CC target=…` | Rewrites that row in place. `target=` is required |
 | `extmap remove INDEX` | Deletes that row |
 
 Target words for `extmap add` and `extmap set`:
 
 | Target | Fields | Example |
 |--------|--------|---------|
-| `target=device` (default) | `rack=`, `device=`, `param=`, optional `sub=` for a Step Seq step | `extmap add ch=1 cc=20 target=device rack=100 device=1000 param=cutoff sub=1` |
+| `target=device` | `rack=`, `device=`, `param=`, optional `sub=` for a Step Seq step | `extmap add ch=1 cc=20 target=device rack=100 device=1 param=179 sub=1` |
 | `target=lfo` | `lfo=`, `domain=s32`, `lfo-param=` (also `cvParam=`) | `extmap add ch=1 cc=21 target=lfo lfo=1 domain=s32 lfo-param=rate` |
 | `target=rack-bypass` (also `rack`) | `rack=` | `extmap add ch=1 cc=22 target=rack-bypass rack=100` |
 | `target=snapshot-slot` | `part=`, optional `pad=` (`1`–`32`) | `extmap add ch=1 cc=23 target=snapshot-slot part=knobs pad=5` |
@@ -37,10 +37,12 @@ Target words for `extmap add` and `extmap set`:
 `extmap list` prints one line per row, for example:
 
 ```text
-  [0] src=0 ch=1 num=20 target=device rack=100 dev=1000 param=3 sub=255
+  [0] src=0 ch=1 num=20 target=device rack=100 dev=1000 param=0 sub=255
   [1] src=0 ch=1 num=21 target=lfo domain=s32 lfo=1 lfo-param=rate
   [2] src=0 ch=1 num=22 target=rack-bypass rack=100
 ```
+
+A device, rack BYPASS or LFO target must be in the project: a rack, device or parameter that is not there exits `4` (`NotFound`) and changes nothing. Use the ids from `rack list` / `device list`, not positions, and a parameter that device has in `schema`.
 
 A parameter has one mapping: one knob macro or one external row. Adding or
 retargeting a row on a mapped parameter clears its knob mapping, the same as
@@ -74,9 +76,9 @@ Project values change the project you are playing. **SAVE PROJECT** (or `project
 `extmap add` and `extmap set` print the row they wrote (`extmap list` format, no `external mappings: N` header), `meta set` and `globals set` print the project settings ([A set prints the state it left](./session.md#a-set-prints-the-state-it-left)):
 
 ```text
-$ s32 --loopback extmap add ch=1 cc=20
+$ s32 --loopback extmap add ch=1 cc=20 target=lfo lfo=1 domain=s32 lfo-param=rate
 added external mapping row 0 (1 total)
-  [0] src=0 ch=1 num=20 target=device rack=- dev=- param=255 sub=255
+  [0] src=0 ch=1 num=20 target=lfo domain=s32 lfo=1 lfo-param=rate
 $ s32 --loopback --yes globals set bpm=130
 globals updated
 globalChannel=1 clockMode=internal bpm=130.00 transport=stopped encoderBtn=clock octaveEnc=0

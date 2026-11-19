@@ -47,6 +47,8 @@ Waves: `sine`, `triangle`, `square`, `saw`, `fold`, `s-h`, `exponential`, `stepp
 
 An LFO can't modulate itself or close a loop of LFOs (1 → 2 → 1). Those rows are refused.
 
+A rack, device or parameter that is not in the project exits `4` (`NotFound`) and changes nothing. Use the ids from `rack list` / `device list`, not positions, and a parameter that device has in `schema`.
+
 ### Range
 
 For `device` and `lfo` targets, `min` and `max` are values in the target's own range. Values outside it are clamped to the edge. On S32 targets `min` above `max` runs the sweep the other way.

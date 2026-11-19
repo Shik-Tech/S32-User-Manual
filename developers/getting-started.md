@@ -1,6 +1,6 @@
 # Install
 
-s32 **1.3.46** speaks protocol 4. One line installs it; no download page, and no `sudo` for the CLI itself.
+s32 **1.3.47** speaks protocol 4. One line installs it; no download page, and no `sudo` for the CLI itself.
 
 ## macOS
 
@@ -118,6 +118,8 @@ Run `s32` with no command (or `s32 repl`) to keep the connection open:
 ```text
 s32 --usb repl
 s32> list
-s32> pull internal 1 /tmp/p.s32p
+s32> pull internal 1 /tmp/p.s32p --force
 s32> quit
 ```
+
+`pull` does not replace a file unless you add `--force`.

@@ -49,9 +49,10 @@ The s32 CLI is the command-line tool for the S32 MIDI controller. It talks to th
 
 - Every setting is `key=value`. Plain numbers and names only choose what you change. Numbers count from 0: knob 01 is 0, rack 1 is 0.
 - Read before you change, and read again after.
-- Before anything that asks first, back up the active project: run `s32 active`; if it shows `dirty=1`, tell me the backup misses unsaved changes and ask whether to save first with `s32 project save --wait`. Then run `s32 pull <VOLUME> <UID> s32-backup-<UID>-<DATE_TIME>.s32p` with its volume and uid and the current date and time. Never replace an existing file.
+- Before anything that asks first, back up the active project: run `s32 active`; if it shows `dirty=1`, tell me the backup misses unsaved changes and ask whether to save first with `s32 project save --wait`. Then run `s32 pull <VOLUME> <UID> s32-backup-<UID>-<DATE_TIME>.s32p` with its volume and uid and the current date and time. If s32 pull says the file already exists, choose a new name. Never pass --force.
 - Preview a change with `--dry-run` and show me the preview. Pass `--yes` only after I approved that exact change.
 - Stop on any exit code other than 0 and show me the error.
+- Never run a command that s32 commands --json marks "service": true, and never pass --dev. If one seems needed, stop and tell me.
 
 ## Workflow
 
