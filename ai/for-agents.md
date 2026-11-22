@@ -34,9 +34,9 @@ A script runs one command per line, so an agent can do a whole setup in one go. 
 
 <!-- s32-file session.script -->
 ```text
-device add 0 arp
-device param set 0 1 rate=6
-device list 0
+device add 1 arp
+device param set 1 2 rate=6
+device list 1
 ```
 
 <!-- s32-check -->

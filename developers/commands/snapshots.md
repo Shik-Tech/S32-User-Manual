@@ -5,11 +5,11 @@ s32 --loopback repl
 s32> snapshot store knobs next Verse
 s32> snapshot store knobs next Chorus
 s32> snapshot list knobs
-s32> snapshot recall knobs 0
+s32> snapshot recall knobs 1
 s32> snapshot bank set knobs sync=1bar fade=1/4
 ```
 
-`PART` is the bank: `knobs`, `lfos`, or `rack0`…`rack7`. `SLOT` is `0`–`31`. See [Snapshots](/snapshots/) for how banks work on the S32.
+`PART` is the bank: `knobs`, `lfos`, or `rack1`…`rack8` (RACK #1 … #8). `SLOT` is `1`–`32`, the pad number. See [Snapshots](/snapshots/) for how banks work on the S32.
 
 ## Slots
 
@@ -54,18 +54,18 @@ s32> snapshot store knobs next Verse
 s32> snapshot morph set knobs amount=8192
 morph set part=knobs amount=8192
 s32> snapshot morph get knobs
-part=knobs pinA=- pinB=0 morphing=1 amount=8192
+part=knobs pinA=none pinB=1 morphing=1 amount=8192
 s32> snapshot morph set knobs amount=0
 morph set part=knobs amount=0
 s32> snapshot morph get knobs
-part=knobs pinA=- pinB=- morphing=0 amount=0
+part=knobs pinA=none pinB=none morphing=0 amount=0
 ```
 
 ## Arrange
 
 [Arrange](/snapshots/lanes) plays slots as a song: up to 256 rows, one column per bank.
 
-`snapshot arrange get` prints `repeat`, `rate`, `length`, the playing row (`song-row`), the armed **QUEUE** (`drop-row`, `none` when off), then each column.
+`snapshot arrange get` prints `repeat`, `rate`, `length`, the playing row (`song-row`, which counts from `1`, like the row numbers on the screen), the armed **QUEUE** (`drop-row`, `none` when off), then each column.
 
 `snapshot arrange set` changes only the keys you name:
 
@@ -74,10 +74,10 @@ part=knobs pinA=- pinB=- morphing=0 amount=0
 | `repeat` | `loop` or `once` |
 | `rate` | Bars per row, `1`–`128` |
 | `length` | Rows, `1`–`256` |
-| `knobs`, `lfos`, `rack0`… | Slots and `rest`, comma-separated. A short list fills the rest of the column with `rest` |
+| `knobs`, `lfos`, `rack1`…`rack8` | Slots `1`–`32` and `rest`, comma-separated. A short list fills the rest of the column with `rest` |
 
 ```text
-s32> snapshot arrange set repeat=once rate=4 knobs=0,1,0,1 lfos=0,rest,3
+s32> snapshot arrange set repeat=once rate=4 knobs=1,2,1,2 lfos=1,rest,4
 ```
 
 A new project starts with **ARRANGE** off. `snapshot arrange set` writes the song, not that switch: turn **ARRANGE** on in the pencil tab on the panel, or the playhead stays parked and `jump` / `queue` do nothing.
@@ -86,7 +86,7 @@ A new project starts with **ARRANGE** off. `snapshot arrange set` writes the son
 
 | Command | What it does |
 |---------|--------------|
-| `snapshot jump ROW` | Moves the playhead to `ROW` (from `0`) |
+| `snapshot jump ROW` | Moves the playhead to `ROW` (`1`–`256`) |
 | `snapshot queue ROW` | Arms a **QUEUE** on `ROW`. `snapshot queue off` disarms it |
 
 ## Mapping
@@ -96,12 +96,14 @@ A new project starts with **ARRANGE** off. `snapshot arrange set` writes the son
 - **Snapshot slot:** the note or Program Change you learn is pad `01` and the next 31 numbers fill the pads after it. Add `pad=1`–`pad=32` to map that one pad only, for example `extmap add ch=3 cc=34 target=snapshot-slot part=knobs pad=5`; it then ignores the bank's number and the CC sweep. `min=` and `max=` are slots `1`–`32`, as on the screen. The knob skips empty slots. A number outside 1–32 on assignment gives the full 1–32.
 - **Morph amount:** always `0`–`16383`. `min=` and `max=` are ignored. `invert=` still works. It always picks up.
 
-Both turn IN SNAPSHOT to **NO** for that macro. To make it a normal macro again, set a new `mode=` (or `rack=`, `device=`, `param=`, `cvParam=`) without `target=`. IN SNAPSHOT comes back to **YES** and the range becomes the new mode's full range:
+`macro get` prints `target=` and `part=` after `lfo=` (`rack-bypass` has no `part=`); `lfoParam=` follows `lfo=` on every other row.
+
+Both turn IN SNAPSHOT to **NO** for that macro. To make it a normal macro again, set a new `mode=` (or `rack=`, `device=`, `param=`, `lfoParam=`) without `target=`. IN SNAPSHOT comes back to **YES** and the range becomes the new mode's full range:
 
 ```text
-s32> macro set 0 0 target=morph-amount part=knobs
-s32> macro set 0 0 mode=cc msb=7
-s32> macro get 0 0
+s32> macro set 1 1 target=morph-amount part=knobs
+s32> macro set 1 1 mode=cc msb=7
+s32> macro get 1 1
 ```
 
 ## Output after a set
@@ -109,12 +111,12 @@ s32> macro get 0 0
 `snapshot sequence set`, `arrange set`, `flags set`, `parent set`, `bank set` and `morph set` print what they set, then the matching `get` ([A set prints the state it left](./session.md#a-set-prints-the-state-it-left)). `flags set`, `parent set` and `bank set` already printed that state line, so the same line shows twice:
 
 ```text
-$ s32 --loopback snapshot parent set rack 0 in=no
-parent rack=0 in=no
-parent rack=0 in=no
+$ s32 --loopback snapshot parent set rack 1 in=no
+parent rack=1 in=no
+parent rack=1 in=no
 $ s32 --loopback snapshot bank set knobs sync=1bar
 bank part=knobs sync=1bar fade=off
 bank part=knobs sync=1bar fade=off
 ```
 
-With `--json`, lanes and Arrange columns are arrays with one number per step and `null` for a rest (`"steps":[0,1,null]`); an Arrange `drop-row` of `none` is `null`, and `snapshot list --json` has `"name":null` for an empty slot.
+With `--json`, lanes and Arrange columns are arrays with one number per step and `null` for a rest (`"steps":[1,2,null]`); an Arrange `drop-row` of `none` is `null`, `active` and the morph pins are `null` when there are none, and `snapshot list --json` has `"name":null` for an empty slot.

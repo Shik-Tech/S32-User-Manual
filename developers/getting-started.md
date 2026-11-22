@@ -1,6 +1,6 @@
 # Install
 
-s32 **1.3.47** speaks protocol 4. One line installs it; no download page, and no `sudo` for the CLI itself.
+s32 **2.0.0** speaks protocol 4. One line installs it; no download page, and no `sudo` for the CLI itself.
 
 ## macOS
 

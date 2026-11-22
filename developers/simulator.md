@@ -21,9 +21,9 @@ s32 --usb --script session.script
 ```text
 hello
 list
-macro get 0 0
-macro set 4 1 mode=cc msb=74 channel=3
-potname set 4 Cutoff
+macro get 1 1
+macro set 5 2 mode=cc msb=74 channel=3
+potname set 5 Cutoff
 ```
 
 Words in a script line split on spaces, with no quoting. Use names without spaces.
@@ -33,18 +33,18 @@ Words in a script line split on spaces, with no quoting. Use names without space
 Put `--json` before `--script` or `repl` and every line that succeeds prints exactly one JSON object (NDJSON), with no echo and no banner:
 
 ```bash
-printf 'macro get 4 1\nrack list\nmacro set 4 1 channel=3\n' > j.script
+printf 'macro get 5 2\nrack list\nmacro set 5 2 channel=3\n' > j.script
 s32 --loopback --json --script j.script
 ```
 
 ```text
-{"pot":4,"macro":1,"mode":"disabled",...}
-{"count":1,"max":8,"racks":[{"index":0,"id":100,"bypass":"off","in":"yes","devices":1,"name":"Rack 1"}]}
-{"pot":4,"macro":1,"mode":"disabled","msb":0,"lsb":0,"channel":"3",...}
+{"pot":5,"macro":2,"mode":"disabled",...}
+{"count":1,"max":8,"racks":[{"index":1,"id":100,"bypass":"off","in":"yes","devices":1,"name":"Rack 1"}]}
+{"pot":5,"macro":2,"mode":"disabled","msb":0,"lsb":0,"channel":"3",...}
 ```
 
 The third line is the read-back of `macro set`. A failing line prints one [JSON error](./commands/session.md#errors) on stderr with `line` and `text`, and the script stops with that line's exit code; in a REPL the session goes on. The rest is in [JSON output](./commands/session.md#json-output).
 
 ## Test fixtures
 
-`S32_LOOPBACK_DROP_AFTER_WRITE=N` makes the simulator answer nothing after the Nth write has been answered Ok, so the next request times out (exit code 3). It tests what a program does when a change landed but could not be confirmed: `S32_LOOPBACK_DROP_AFTER_WRITE=1 s32 --loopback macro set 4 1 channel=3 --json` prints one error with `"class":"link"` and `"applied":true`.
+`S32_LOOPBACK_DROP_AFTER_WRITE=N` makes the simulator answer nothing after the Nth write has been answered Ok, so the next request times out (exit code 3). It tests what a program does when a change landed but could not be confirmed: `S32_LOOPBACK_DROP_AFTER_WRITE=1 s32 --loopback macro set 5 2 channel=3 --json` prints one error with `"class":"link"` and `"applied":true`.

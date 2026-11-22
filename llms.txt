@@ -2,7 +2,7 @@
 
 > s32 drives the S32 over USB from a terminal or an AI agent: projects, racks and devices, knob macros, LFOs, external MIDI maps, snapshots and the screen. Every setting is key=value. `s32 <command> --help` and `s32 commands --json` describe every command; `s32 --loopback` rehearses without hardware.
 
-Start with "Set up your agent". Close the web editor before you connect: the S32 talks to one app at a time. Rack and device ids differ on every S32: read them with `s32 rack list` and `s32 device list 0` just before you use them. Every link below, except the S32 User Manual under Optional, is a Markdown copy of a manual page.
+Start with "Set up your agent". Close the web editor before you connect: the S32 talks to one app at a time. Rack and device ids differ on every S32: read them with `s32 rack list` and `s32 device list 1` just before you use them. Every link below, except the S32 User Manual under Optional, is a Markdown copy of a manual page.
 
 ## Use the S32 with AI
 - [Overview](https://s32-manual.shik.tech/ai/index.md): what an agent can do with the S32, in three steps
@@ -12,7 +12,7 @@ Start with "Set up your agent". Close the web editor before you connect: the S32
 - [For agents](https://s32-manual.shik.tech/ai/for-agents.md): this index, Markdown copies, finding commands, scripts
 
 ## s32 CLI
-- [Overview](https://s32-manual.shik.tech/developers/index.md): what s32 is, numbering from 0, key=value
+- [Overview](https://s32-manual.shik.tech/developers/index.md): what s32 is, panel numbering from 1, key=value
 - [Install](https://s32-manual.shik.tech/developers/getting-started.md): install s32 on macOS, Linux and Windows
 - [Connect](https://s32-manual.shik.tech/developers/connecting.md): connect to an S32 and the commands that ask first
 - [Simulator and scripts](https://s32-manual.shik.tech/developers/simulator.md): --loopback, --script and repl

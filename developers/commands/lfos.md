@@ -2,17 +2,17 @@
 
 ```text
 s32 --loopback repl
-s32> lfo cfg get s32 2
-s32> lfo cfg set s32 2 wave=sine freq=3.75 enabled=on
-s32> macro set 4 1 mode=cc msb=1
-s32> lfo assign add 2 target=macro pot=4 macro=1 min=-0.25 max=0.25
+s32> lfo cfg get s32 3
+s32> lfo cfg set s32 3 wave=sine freq=3.75 enabled=on
+s32> macro set 5 2 mode=cc msb=1
+s32> lfo assign add 3 target=macro pot=5 macro=2 min=-0.25 max=0.25
 s32> lfo assign list
-s32> lfo assign remove 0
+s32> lfo assign remove 1
 ```
 
 A macro whose mode takes no LFO (disabled, device, rack control, S32 LFO) is refused with `BadRequest`; set a MIDI-message mode first.
 
-`DOMAIN` is `s32` (the S32's own [LFOs](/lfos/)). `INDEX` is the LFO, `0`–`15`.
+`DOMAIN` is `s32` (the S32's own [LFOs](/lfos/)). `INDEX` is the LFO, `1`–`16`.
 
 ## Settings
 
@@ -42,7 +42,7 @@ Waves: `sine`, `triangle`, `square`, `saw`, `fold`, `s-h`, `exponential`, `stepp
 | `target=` | Moves | Address | `param=` |
 |-----------|-------|---------|----------|
 | `device` | A rack device parameter | `rack=ID device=ID` (ids from `rack list` / `device list`) | Parameter name (`bypass`, `rate`, `gate`, …) or number |
-| `lfo` | Another LFO in the same domain | `targetLfo=INDEX` | LFO parameter (`enabled`, `wave`, `rate`, `sync`, `depth`, `offset`, `phase`) |
+| `lfo` | Another LFO in the same domain | `targetLfo=LFO` (`1`–`16`) | LFO parameter (`enabled`, `wave`, `rate`, `sync`, `depth`, `offset`, `phase`) |
 | `macro` | A knob macro | `pot=KNOB macro=MACRO` | — |
 
 An LFO can't modulate itself or close a loop of LFOs (1 → 2 → 1). Those rows are refused.
@@ -62,12 +62,12 @@ For `macro` targets, `min` and `max` are the BELOW and ABOVE window around the k
 `lfo cfg set` prints the LFO's settings after its confirmation, and `lfo assign add` and `lfo assign set` print the row they wrote, with no list header ([A set prints the state it left](./session.md#a-set-prints-the-state-it-left)):
 
 ```text
-$ s32 --loopback lfo cfg set s32 0 freq=2 wave=triangle
-lfo s32 0 updated
-s32 lfo 0: enabled=on wave=triangle freq=2.000 bpm=1.000 amp=1.000 offset=0.000 sync=on retrigger=start liveOwned=0x0000 allowMorph=0x9000
-$ s32 --loopback lfo assign add 0 target=macro pot=1 macro=0
-added assignment 0 (1 total)
-  [0] lfo=0 target=macro pot=1 macro=0 range=-0.500..0.500
+$ s32 --loopback lfo cfg set s32 1 freq=2 wave=triangle
+lfo s32 1 updated
+s32 lfo 1: enabled=on wave=triangle freq=2.000 bpm=1.000 amp=1.000 offset=0.000 sync=on retrigger=start liveOwned=0x0000 allowMorph=0x9000
+$ s32 --loopback lfo assign add 1 target=macro pot=2 macro=1
+added assignment 1 (1 total)
+  [1] lfo=1 target=macro pot=2 macro=1 range=-0.500..0.500
 ```
 
 With `--json`, `lfo cfg get` also reports `phase` in degrees (`0`–`360`, as `phase=` takes it); the text output does not print it. `amp` is `null` for a CV LFO and `depth` is `null` for an s32 LFO. In `lfo assign list --json` each row has `rack`, `device`, `param`, `pot`, `macro` and `targetLfo`, `null` where the target does not use them, and `range=a..b` is `min` and `max`.

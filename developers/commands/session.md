@@ -81,7 +81,7 @@ s32 --loopback status --json
 
 - **One object, one line.** stdout carries only that object: no USB warning, no echo, no banner. `--json` implies `-q`.
 - **Keys are the names you type.** A field that a set command takes as `key=value` has that key as its name (`channel`, `cvOut`, `targetLfo`, `cc`). When the text prints another spelling the key is the accepted one: `extmap list` prints `num=` and `dev=`, the JSON says `cc` and `device`. A field no command takes keeps the word the text prints (`jobState`, `backStack`).
-- **Words, numbers, null.** An enum or yes/no is the exact word you can pass back (`"on"`, `"global"`, `"yes"`). A number is a JSON number with the text's precision (`0.500`, `120.00`). Indices start at 0. A name is a string with no padding. An empty slot, a rack or device that is not set, and a field that does not apply to the target are `null`. Masks stay hex strings (`"0x9000"`). A few numbers keep the value the text prints for "none": `sub` 255, `active` 255 in a snapshot list.
+- **Words, numbers, null.** An enum or yes/no is the exact word you can pass back (`"on"`, `"global"`, `"yes"`). A number is a JSON number with the text's precision (`0.500`, `120.00`). Positions (`index`, `slot`, `pot`, `macro`, `lfo`, …) are the panel's numbers, from 1. A name is a string with no padding. An empty slot, a rack or device that is not set, and a field that does not apply to the target are `null`. Masks stay hex strings (`"0x9000"`). A value the text prints as `none` (`sub`, `lfo`, `cvOut`, `active`, `pinA`, `pinB`, the `view state` context) is `null`.
 - **Fields the text prints only sometimes** are always there, `null` when the text leaves them out: `job --json` has `volume` (`0` internal, `1` card), set only for a save-as or duplicate job.
 - **Lists** are a plural array plus their counters (`{"count":1,"max":8,"racks":[...]}`); every row carries its `index` or `slot`.
 - **Escaping.** Strings follow RFC 8259: `"` and `\` are escaped, control bytes become `\u00XX`, valid UTF-8 passes through, and a byte that is not valid UTF-8 becomes `\u00XX` (its Latin-1 reading), so the output is always valid JSON.
@@ -98,7 +98,7 @@ error: --json is not available for 's32 watch'
 With `--json` a failure prints exactly one JSON object on stderr and leaves stdout empty. The exit code is the same as without `--json`.
 
 ```bash
-s32 --loopback macro set 4 1 chanel=3 --json
+s32 --loopback macro set 5 2 chanel=3 --json
 ```
 
 ```json
@@ -115,7 +115,7 @@ s32 --loopback macro set 4 1 chanel=3 --json
 | `status` | The S32 status word (`"NotFound"`) for class `refused`; `"VersionMismatch"` when the tool and the S32 speak different editor protocols (class `link`); otherwise `null`. It is also `null` for the refused error "the S32 changed while s32 read the list", where the S32 sent no status |
 | `applied` | `true` when the S32 acknowledged a write of this command before it failed, so a program can tell "nothing changed" from "changed, not confirmed". For class `link` a write whose reply was lost may still have landed on the S32. It is `true` for "added assignment N, but the S32 changed while s32 read …": the write was saved before the read-back saw the change |
 
-Errors that come before the command is known are JSON too: an unknown command, an unknown word under a group (`macro sett 4 1`, with the close command in `suggestions`). In a script or REPL line the object also has `line` (the line number) and `text` (the line).
+Errors that come before the command is known are JSON too: an unknown command, an unknown word under a group (`macro sett 5 2`, with the close command in `suggestions`). In a script or REPL line the object also has `line` (the line number) and `text` (the line).
 
 `--json` does not prompt, not even on a terminal. A command that asks first and has a JSON form (`globals set`) exits with code 5 and the `declined` error unless you pass `--yes`; nothing is sent. The other commands that ask (`rack clear`, `project delete`, ...) have no JSON form, so `--json` on them is the usage error above, with or without `--yes`.
 
@@ -124,12 +124,12 @@ Errors that come before the command is known are JSON too: an unknown command, a
 After a set succeeds, the CLI reads the state back from the S32 and prints it: your own confirmation line first (unchanged), then the lines the matching `get` prints. The state comes from a real request, so it shows what the S32 stored, which can differ from what you sent (a value it rounded or limited).
 
 ```text
-$ s32 --loopback macro set 4 1 channel=3
-macro 4/1 updated
-pot 4 macro 1: mode=disabled msb=0 lsb=0 channel=3 min=0.000 max=127.000 ...
+$ s32 --loopback macro set 5 2 channel=3
+macro 5/2 updated
+pot 5 macro 2: mode=disabled msb=0 lsb=0 channel=3 min=0.000 max=127.000 ...
 ```
 
-- **Lists** print only the row you changed, with no list header: `rack set 0 bypass=on` prints `rack 0 bypass=on` and then `  [0] id=100  bypass=on in=yes devices=1 Rack 1`.
+- **Lists** print only the row you changed, with no list header: `rack set 1 bypass=on` prints `rack 1 bypass=on` and then `  [1] id=100  bypass=on in=yes devices=1 Rack 1`.
 - **`--json`** prints only the read-back object (for a list, the changed row's object); the confirmation line is not printed.
 - **`device param set`** reads back one parameter per `PARAM=VALUE`, in the order given: one line each in text, one object with a `params` array in JSON.
 - **Five sets already printed their state.** `snapshot parent set`, `snapshot flags set`, `snapshot bank set`, `device host-device ... host=` and `extmap set` print the state line themselves, so the same line shows twice: the confirmation, then the read-back.
@@ -150,19 +150,19 @@ Within a CLI major version (`1.x.y`), a JSON key or error field is never renamed
 `--dry-run` works on every command that changes the S32, and on `pull`. It checks the command exactly as the real run does, reads what it needs from the S32, prints the change it would make and exits 0. **It sends no write**, and it needs no `--yes` and does not prompt, even for `project delete`, `project load`, `push --activate`, `rack clear`, `rack duplicate`, `snapshot delete` and `globals set`.
 
 ```bash
-s32 --loopback macro set 4 1 channel=3 msb=74 --dry-run
+s32 --loopback macro set 5 2 channel=3 msb=74 --dry-run
 ```
 
 ```text
-dry-run: s32 macro set 4 1 channel=3 msb=74 (nothing sent)
+dry-run: s32 macro set 5 2 channel=3 msb=74 (nothing sent)
   channel: global -> 3
   msb: 0 -> 74
 ```
 
 - A key that keeps its value prints `msb: 0 (unchanged)`. A key that creates a row (`extmap add`, `lfo assign add`) prints `ch: (new) -> 1`.
-- A command that changes no named key prints one `  would …` sentence: `would permanently remove the stored project vol=0 uid=3 name=Project 3`, `would remove every device in rack 0 (id 100, 1 devices)`.
+- A command that changes no named key prints one `  would …` sentence: `would permanently remove the stored project vol=0 uid=3 name=Project 3`, `would remove every device in rack 1 (id 100, 1 devices)`.
 - Wrong arguments, an unknown key or a project that does not exist fail with the same exit code and message as the real command. `--dry-run` on any other command that does not change the S32 (`macro get`, `commands`) is a usage error.
-- With `--json` it prints one object: `{"dryRun":true,"command":"macro set","target":{"pot":4,"macro":1},"destructive":false,"changes":[{"key":"channel","from":"global","to":"3"}],"would":null}`. `from` and `to` are the words the CLI prints and accepts; `from` is `null` for a new row. `target` has one member per target argument you typed (a number when you typed a plain integer, otherwise a string).
+- With `--json` it prints one object: `{"dryRun":true,"command":"macro set","target":{"pot":5,"macro":2},"destructive":false,"changes":[{"key":"channel","from":"global","to":"3"}],"would":null}`. `from` and `to` are the words the CLI prints and accepts; `from` is `null` for a new row. `target` has one member per target argument you typed (a number when you typed a plain integer, otherwise a string).
 - `--dry-run` checks only what the CLI can check: the S32 can still refuse the real write. Its reads count against the S32's rate limit like any read.
 
 ## Completion
@@ -172,7 +172,7 @@ source <(s32 completion bash)      # bash: add this line to ~/.bashrc
 source <(s32 completion zsh)       # zsh: add this line to ~/.zshrc
 ```
 
-Press Tab to complete commands, verbs, `key=` names and the words after `key=` (`macro set 4 1 mode=` lists the macro modes).
+Press Tab to complete commands, verbs, `key=` names and the words after `key=` (`macro set 5 2 mode=` lists the macro modes).
 
 ## Schema JSON
 

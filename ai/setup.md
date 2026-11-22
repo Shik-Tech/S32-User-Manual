@@ -1,6 +1,6 @@
 # Set up your agent
 
-Paste one block into your agent. It installs the s32 CLI, checks it, and saves the s32-cli skill with the rules to follow. You only paste: the words in the block are for the agent. Numbers count from 0: knob 01 is `0`, rack 1 is `0`.
+Paste one block into your agent. It installs the s32 CLI, checks it, and saves the s32-cli skill with the rules to follow. You only paste: the words in the block are for the agent. Numbers match the panel: knob 01 is `1`, rack 1 is `1`.
 
 ## Before you start
 
@@ -43,11 +43,11 @@ The s32 CLI is the command-line tool for the S32 MIDI controller. It talks to th
 - Close the S32 web editor. The S32 talks to one app at a time.
 - Run `s32 hello`. Stop if it fails.
 - To try a command without touching the S32, add `--loopback`, for example `s32 --loopback hello`. The simulator starts fresh on every run. Its ids, names and ranges are not the S32's.
-- Numbers count from 0: knob 01 is `0`, macro 1 is `0`, rack 1 is `0`, and a device's position in `device list` is its number (MIDI IN is `0`). Rack and device ids (`id=` in `rack list` and `device list`) are not positions. Ids are different on every S32: read them with `s32 rack list` and `s32 device list 0` just before you use one, after your last change to that rack. Never copy an id from an example or from the simulator.
+- Numbers match the panel: knob 01 is `1`, macro 1 is `1`, rack 1 is `1`, and a device's place in `device list` is its number (MIDI IN is `1`). Rack and device ids (`id=` in `rack list` and `device list`) are not places. Ids are different on every S32: read them with `s32 rack list` and `s32 device list 1` just before you use one, after your last change to that rack. Never copy an id from an example or from the simulator.
 
 ## Ground rules
 
-- Every setting is `key=value`. Plain numbers and names only choose what you change. Numbers count from 0: knob 01 is 0, rack 1 is 0.
+- Every setting is `key=value`. Plain numbers and names only choose what you change. Numbers match the panel: knob 01 is 1, rack 1 is 1.
 - Read before you change, and read again after.
 - Before anything that asks first, back up the active project: run `s32 active`; if it shows `dirty=1`, tell me the backup misses unsaved changes and ask whether to save first with `s32 project save --wait`. Then run `s32 pull <VOLUME> <UID> s32-backup-<UID>-<DATE_TIME>.s32p` with its volume and uid and the current date and time. If s32 pull says the file already exists, choose a new name. Never pass --force.
 - Preview a change with `--dry-run` and show me the preview. Pass `--yes` only after I approved that exact change.
@@ -67,7 +67,7 @@ The s32 CLI is the command-line tool for the S32 MIDI controller. It talks to th
 ## Device parameters
 
 - `s32 schema --emit-schema-json` lists every device with each parameter's id, name and range.
-- Names work for `rate`, `gate` and `port`. Every other parameter is its number: `device param set 0 1 87=4`.
+- Names work for `rate`, `gate` and `port`. Every other parameter is its number: `device param set 1 2 87=4`.
 - `device add` puts a new device before MIDI OUT. If the rack already has a Clock or a MIDI OUT, do not add another.
 - A new MIDI IN or MIDI OUT uses PORT USB. `port=1` is MIDI1, `port=2` is MIDI2, `port=3` is USB HOST.
 - On SYNCED, times are steps of 24 per quarter note: 96 = 1/1, 48 = 1/2, 24 = 1/4, 12 = 1/8, 6 = 1/16.

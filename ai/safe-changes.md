@@ -8,7 +8,7 @@ A change prints what it did, then the new state. Read it before you go on. `s32 
 
 <!-- s32-check -->
 ```bash
-s32 rack set 0 bypass=on
+s32 rack set 1 bypass=on
 s32 rack list
 ```
 
@@ -16,8 +16,8 @@ s32 rack list
 
 <!-- s32-output -->
 ```text
-rack 0 bypass=on
-  [0] id=100  bypass=on in=yes devices=1 Rack 1
+rack 1 bypass=on
+  [1] id=100  bypass=on in=yes devices=1 Rack 1
 ```
 
 ## Commands that ask first {#change-safely}
@@ -74,7 +74,7 @@ A typo in a key name stops the command with exit code 2. The S32 is not changed.
 
 <!-- s32-check exit=2 -->
 ```bash
-s32 rack set 0 bypas=on
+s32 rack set 1 bypas=on
 ```
 
 **Output**

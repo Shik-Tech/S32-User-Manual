@@ -4,13 +4,13 @@ The **s32 CLI** drives the S32 from a terminal or a script: pull and push projec
 
 | | |
 |---|---|
-| CLI | `s32` 1.3.47 |
+| CLI | `s32` 2.0.0 |
 | Protocol | 4 |
 | Firmware | the version in the site header |
 
 The s32 CLI talks to the **S32 Editor** USB interface, the same one the [web editor](https://editor.shik.tech) uses. It is not USB MIDI and not the USB drive. Actions that only work on the panel (format, firmware update, text entry) stay on the panel.
 
-Knob, macro, rack, device, LFO and snapshot numbers in commands count from 0. `macro get 4 1` is knob 05, macro 2 on the screen.
+Knob, macro, rack, device, LFO and snapshot numbers in commands match the panel and count from 1: `macro get 5 2` is knob 05, macro 2 on the screen. A `0` is refused. Rack and device ids (`id=`) are not counted.
 
 A setting is always `key=value` (`sync=1bar`, `in=no`, `bypass=on`). A word without `=` only names what the command works on: a rack, device, knob, slot, part or name. A misspelled or unknown key, a missing value or a leftover word is refused before anything reaches the S32.
 

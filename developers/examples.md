@@ -23,9 +23,9 @@ See [Push](./commands/projects.md#push).
 Knob 05, macro 2, CC 74 on channel 3:
 
 ```text
-s32> macro set 4 1 mode=cc msb=74 channel=3
-s32> potname set 4 Cutoff
-s32> macro get 4 1
+s32> macro set 5 2 mode=cc msb=74 channel=3
+s32> potname set 5 Cutoff
+s32> macro get 5 2
 ```
 
 See [Macros](./commands/macros.md) for every mode.
@@ -33,22 +33,22 @@ See [Macros](./commands/macros.md) for every mode.
 ## Add an Arpeggiator
 
 ```text
-s32> device add 0 arp
-s32> device list 0
-s32> device param set 0 1 rate=6
-s32> device param get 0 1 rate
+s32> device add 1 arp
+s32> device list 1
+s32> device param set 1 2 rate=6
+s32> device param get 1 2 rate
 ```
 
 ## Sweep the Arpeggiator gate with an LFO
 
-Continue from the block above. `rack=` and `device=` are [ids, not positions](./commands/racks.md): use the rack id and the Arpeggiator's `id=` from the `device list 0` above (on the simulator, `100` and `1`):
+Continue from the block above. `rack=` and `device=` are [ids, not positions](./commands/racks.md): use the rack id and the Arpeggiator's `id=` from the `device list 1` above (on the simulator, `100` and `1`):
 
 ```text
-s32> lfo cfg set s32 0 wave=triangle freq=0.5 enabled=on
-s32> lfo assign add 0 target=device rack=100 device=1 param=gate min=20 max=80
-s32> lfo assign add 0 target=lfo targetLfo=1 param=depth min=0 max=1
-s32> macro set 2 1 mode=cc msb=1
-s32> lfo assign add 0 target=macro pot=2 macro=1
+s32> lfo cfg set s32 1 wave=triangle freq=0.5 enabled=on
+s32> lfo assign add 1 target=device rack=100 device=1 param=gate min=20 max=80
+s32> lfo assign add 1 target=lfo targetLfo=2 param=depth min=0 max=1
+s32> macro set 3 2 mode=cc msb=1
+s32> lfo assign add 1 target=macro pot=3 macro=2
 s32> lfo assign list
 ```
 
@@ -57,7 +57,7 @@ LFO 1 now also moves LFO 2's depth and knob 03, macro 2.
 ## Grab the screen
 
 ```text
-s32> view nav s32-lfo index=2
+s32> view nav s32-lfo index=3
 s32> screen png /tmp/oled.png
 ```
 
@@ -74,7 +74,7 @@ Prints knob events for eight seconds.
 ```text
 s32> snapshot store knobs next Verse
 s32> snapshot store knobs next Chorus
-s32> snapshot arrange set repeat=loop rate=4 length=16 knobs=0,1,0,1
+s32> snapshot arrange set repeat=loop rate=4 length=16 knobs=1,2,1,2
 s32> snapshot arrange get
 ```
 

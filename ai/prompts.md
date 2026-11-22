@@ -2,10 +2,10 @@
 
 Prompts you can give an AI agent, each with the commands it runs on the s32 CLI and the lines it should see. Every command here is checked on the simulator. For people who type the commands themselves, see [Examples](../developers/examples.md). To set the agent up first, start with [Set up your agent](./setup.md).
 
-Commands count from 0: knob 01 is `0`, macro 1 is `0`, rack 1 is `0`, and a device's position in `device list` is its number (MIDI IN is `0`). Rack and device **ids** (`id=` in `rack list` and `device list`) are not positions.
+Numbers match the panel: knob 01 is `1`, macro 1 is `1`, rack 1 is `1`, and a device's place in `device list` is its number (MIDI IN is `1`). Rack and device **ids** (`id=` in `rack list` and `device list`) are not places.
 
 - A name in angle brackets, like `<RACK_ID>` or `<EUCLID_ID>`, is an id: the agent fills it in from the `device list` it ran just before. Do not type it as written.
-- Every example starts from a fresh simulator. Your S32's racks, ids and names differ: the agent reads them first (`s32 device list 0`, `s32 rack list`) and uses yours.
+- Every example starts from a fresh simulator. Your S32's racks, ids and names differ: the agent reads them first (`s32 device list 1`, `s32 rack list`) and uses yours.
 - The lines under each block are the ones to check. The commands print more, and the read-back after each change shows the new state.
 - On the S32, `device add` puts a new device before MIDI OUT. If the rack already has a Clock or a MIDI OUT, the agent skips adding it.
 - A new MIDI IN and a new MIDI OUT use **PORT USB**. To use a MIDI jack, ask for it: `port=1` is MIDI1.
@@ -45,7 +45,7 @@ Is my S32 connected? Tell me which project is loaded and what's in rack 1.
 s32 hello
 s32 active
 s32 rack list
-s32 device list 0
+s32 device list 1
 ```
 
 **Output**
@@ -54,9 +54,9 @@ s32 device list 0
 ```text
 volume=0 uid=1 dirty=0 dirtyGen=0 name=Project 1
 1/8 racks
-  [0] id=100  bypass=off in=yes devices=1 Rack 1
-rack 0 (id 100): 1 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
+  [1] id=100  bypass=off in=yes devices=1 Rack 1
+rack 1 (id 100): 1 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
 ```
 
 **What you hear:** nothing changes. The agent reports the project, the racks and rack 1's devices.
@@ -74,28 +74,28 @@ In rack 1, arpeggiate what I play in sixteenth notes. My keyboard is on the MIDI
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 clock
-s32 device add 0 arp
-s32 device add 0 midi-out
-s32 device param set 0 0 port=1
-s32 device param set 0 2 rate=6
-s32 device param set 0 3 port=1
-s32 device list 0
+s32 device list 1
+s32 device add 1 clock
+s32 device add 1 arp
+s32 device add 1 midi-out
+s32 device param set 1 1 port=1
+s32 device param set 1 3 rate=6
+s32 device param set 1 4 port=1
+s32 device list 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 device 0 param port (149) set
-rack 0 device 2 param rate (3) set
-rack 0 device 3 param port (149) set
-rack 0 (id 100): 4 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=clock        id=1     params=2   Device 2
-  [2] type=arp          id=2     params=9   Device 3
-  [3] type=midi-out     id=3     params=3   Device 4
+rack 1 device 1 param port (149) set
+rack 1 device 3 param rate (3) set
+rack 1 device 4 param port (149) set
+rack 1 (id 100): 4 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=clock        id=1     params=2   Device 2
+  [3] type=arp          id=2     params=9   Device 3
+  [4] type=midi-out     id=3     params=3   Device 4
 ```
 
 **What you hear:** press the encoder to start the clock and hold a chord. Your synth plays it one note at a time, in sixteenth notes at the project tempo. Let go and it stops.
@@ -113,19 +113,19 @@ Make knob 01 control my synth's filter cutoff, CC 74 on channel 1 out of MIDI OU
 
 <!-- s32-check -->
 ```bash
-s32 knobmap get 0
-s32 macro set 0 0 mode=cc msb=74 channel=1 min=0 max=127 outputs=out1
-s32 potname set 0 CUTOFF
-s32 knobmap get 0
+s32 knobmap get 1
+s32 macro set 1 1 mode=cc msb=74 channel=1 min=0 max=127 outputs=out1
+s32 potname set 1 CUTOFF
+s32 knobmap get 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-macro 0/0 updated
-pot 0 renamed
-  pot  0 CUTOFF           macro0 mode=cc msb=74
+macro 1/1 updated
+pot 1 renamed
+  pot  1 CUTOFF           macro1 mode=cc msb=74
 ```
 
 **What you hear:** turn knob 01 and the filter opens and closes. Most synths use CC 74 for cutoff; if yours does not, ask the agent for its number.
@@ -145,26 +145,26 @@ In rack 1, arpeggiate what I play in sixteenths and echo every note.
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 clock
-s32 device add 0 arp
-s32 device add 0 delay
-s32 device add 0 midi-out
-s32 device param set 0 2 rate=6
-s32 device list 0
+s32 device list 1
+s32 device add 1 clock
+s32 device add 1 arp
+s32 device add 1 delay
+s32 device add 1 midi-out
+s32 device param set 1 3 rate=6
+s32 device list 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 device 2 param rate (3) set
-rack 0 (id 100): 5 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=clock        id=1     params=2   Device 2
-  [2] type=arp          id=2     params=9   Device 3
-  [3] type=delay        id=3     params=10  Device 4
-  [4] type=midi-out     id=4     params=3   Device 5
+rack 1 device 3 param rate (3) set
+rack 1 (id 100): 5 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=clock        id=1     params=2   Device 2
+  [3] type=arp          id=2     params=9   Device 3
+  [4] type=delay        id=3     params=10  Device 4
+  [5] type=midi-out     id=4     params=3   Device 5
 ```
 
 **What you hear:** each arpeggio note comes back an eighth note later, five times, each echo half as loud as the one before. These are the Delay's own starting values: DELAY TIME 1/8, REPETITIONS 5, FEEDBACK 50%, DRY/WET 50%.
@@ -182,29 +182,29 @@ In rack 1, turn every note I play into a chord that stays in C major.
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 harmony
-s32 device add 0 scaler
-s32 device add 0 midi-out
-s32 device param set 0 1 87=4 88=7
-s32 device param set 0 2 18=0 19=0 20=2
-s32 device list 0
+s32 device list 1
+s32 device add 1 harmony
+s32 device add 1 scaler
+s32 device add 1 midi-out
+s32 device param set 1 2 87=4 88=7
+s32 device param set 1 3 18=0 19=0 20=2
+s32 device list 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 device 1 param 87 (87) set
-rack 0 device 1 param 88 (88) set
-rack 0 device 2 param 18 (18) set
-rack 0 device 2 param 19 (19) set
-rack 0 device 2 param 20 (20) set
-rack 0 (id 100): 4 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=harmony      id=1     params=10  Device 2
-  [2] type=scaler       id=2     params=16  Device 3
-  [3] type=midi-out     id=3     params=3   Device 4
+rack 1 device 2 param 87 (87) set
+rack 1 device 2 param 88 (88) set
+rack 1 device 3 param 18 (18) set
+rack 1 device 3 param 19 (19) set
+rack 1 device 3 param 20 (20) set
+rack 1 (id 100): 4 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=harmony      id=1     params=10  Device 2
+  [3] type=scaler       id=2     params=16  Device 3
+  [4] type=midi-out     id=3     params=3   Device 4
 ```
 
 **What you hear:** HARMONY adds a major third and a fifth (+4, +7). SCALER on C MAJOR with QUANTIZE DOWN pulls any note outside the key down a semitone. So every white key gives the chord of its scale degree: C gives C E G, D gives D F A, E gives E G B, F gives F A C, G gives G B D, A gives A C E, B gives B D F.
@@ -222,37 +222,37 @@ In rack 1, generate an eighth-note melody in A minor pentatonic, starting on the
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 clock
-s32 device add 0 seed
-s32 device add 0 scaler
-s32 device add 0 random
-s32 device add 0 midi-out
-s32 device param set 0 2 rate=6 154=57
-s32 device param set 0 3 18=9 19=0 20=5
-s32 device param set 0 4 25=0 27=15 28=25
-s32 device list 0
+s32 device list 1
+s32 device add 1 clock
+s32 device add 1 seed
+s32 device add 1 scaler
+s32 device add 1 random
+s32 device add 1 midi-out
+s32 device param set 1 3 rate=6 154=57
+s32 device param set 1 4 18=9 19=0 20=5
+s32 device param set 1 5 25=0 27=15 28=25
+s32 device list 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 device 2 param rate (3) set
-rack 0 device 2 param 154 (154) set
-rack 0 device 3 param 18 (18) set
-rack 0 device 3 param 19 (19) set
-rack 0 device 3 param 20 (20) set
-rack 0 device 4 param 25 (25) set
-rack 0 device 4 param 27 (27) set
-rack 0 device 4 param 28 (28) set
-rack 0 (id 100): 6 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=clock        id=1     params=2   Device 2
-  [2] type=seed         id=2     params=15  Device 3
-  [3] type=scaler       id=3     params=16  Device 4
-  [4] type=random       id=4     params=5   Device 5
-  [5] type=midi-out     id=5     params=3   Device 6
+rack 1 device 3 param rate (3) set
+rack 1 device 3 param 154 (154) set
+rack 1 device 4 param 18 (18) set
+rack 1 device 4 param 19 (19) set
+rack 1 device 4 param 20 (20) set
+rack 1 device 5 param 25 (25) set
+rack 1 device 5 param 27 (27) set
+rack 1 device 5 param 28 (28) set
+rack 1 (id 100): 6 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=clock        id=1     params=2   Device 2
+  [3] type=seed         id=2     params=15  Device 3
+  [4] type=scaler       id=3     params=16  Device 4
+  [5] type=random       id=4     params=5   Device 5
+  [6] type=midi-out     id=5     params=3   Device 6
 ```
 
 **What you hear:** start the clock and a melody of eighth notes plays by itself.
@@ -275,44 +275,44 @@ rack 0 (id 100): 6 device(s)
 In rack 1, arpeggiate in sixteenths. Let LFO 1 slowly move the arpeggiator's note length between 25% and 90% over two bars, and give me knob 02, named BREATH, for how much it moves.
 ```
 
-**Ids:** `<RACK_ID>` is the `id=` of rack 1 in `s32 rack list`, and `<ARP_ID>` is the Arpeggiator's `id=` in `s32 device list 0`. On the simulator they are `100` and `2`. Yours differ.
+**Ids:** `<RACK_ID>` is the `id=` of rack 1 in `s32 rack list`, and `<ARP_ID>` is the Arpeggiator's `id=` in `s32 device list 1`. On the simulator they are `100` and `2`. Yours differ.
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 clock
-s32 device add 0 arp
-s32 device add 0 midi-out
-s32 device list 0
-s32 device param set 0 2 rate=6
-s32 lfo cfg get s32 0
-s32 lfo cfg set s32 0 wave=sine sync=on bpm=0.5 enabled=on
-s32 lfo assign add 0 target=device rack=<RACK_ID> device=<ARP_ID> param=gate min=25 max=90
-s32 macro set 1 0 mode=s32-lfo lfo=0 lfo-param=depth min=0 max=1
-s32 potname set 1 BREATH
-s32 lfo cfg get s32 0
+s32 device list 1
+s32 device add 1 clock
+s32 device add 1 arp
+s32 device add 1 midi-out
+s32 device list 1
+s32 device param set 1 3 rate=6
+s32 lfo cfg get s32 1
+s32 lfo cfg set s32 1 wave=sine sync=on bpm=0.5 enabled=on
+s32 lfo assign add 1 target=device rack=<RACK_ID> device=<ARP_ID> param=gate min=25 max=90
+s32 macro set 2 1 mode=s32-lfo lfo=1 lfoParam=depth min=0 max=1
+s32 potname set 2 BREATH
+s32 lfo cfg get s32 1
 s32 lfo assign list
-s32 knobmap get 1
+s32 knobmap get 2
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 (id 100): 4 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=clock        id=1     params=2   Device 2
-  [2] type=arp          id=2     params=9   Device 3
-  [3] type=midi-out     id=3     params=3   Device 4
-rack 0 device 2 param rate (3) set
-lfo s32 0 updated
-added assignment 0 (1 total)
-macro 1/0 updated
-pot 1 renamed
-s32 lfo 0: enabled=on wave=sine freq=1.000 bpm=0.500 amp=1.000 offset=0.000 sync=on retrigger=start liveOwned=0x0000 allowMorph=0x9000
+rack 1 (id 100): 4 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=clock        id=1     params=2   Device 2
+  [3] type=arp          id=2     params=9   Device 3
+  [4] type=midi-out     id=3     params=3   Device 4
+rack 1 device 3 param rate (3) set
+lfo s32 1 updated
+added assignment 1 (1 total)
+macro 2/1 updated
+pot 2 renamed
+s32 lfo 1: enabled=on wave=sine freq=1.000 bpm=0.500 amp=1.000 offset=0.000 sync=on retrigger=start liveOwned=0x0000 allowMorph=0x9000
 1 assignment(s)
-  [0] lfo=0 target=device rack=100 device=2 param=gate range=25.000..90.000
-  pot  1 BREATH           macro0 mode=s32-lfo msb=1
+  [1] lfo=1 target=device rack=100 device=2 param=gate range=25.000..90.000
+  pot  2 BREATH           macro1 mode=s32-lfo msb=1
 ```
 
 **What you hear:** with the clock running, hold a chord. The arpeggio's notes swell from short and clipped to smooth and back, once every two bars (`bpm=0.5` is one cycle per 2 bars). Turn BREATH left and the note length stops moving; turn it right for the full 25–90% sweep.
@@ -330,28 +330,28 @@ In rack 1, add an envelope that opens my synth's filter (CC 74) on every note: i
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 clock
-s32 device add 0 envelope
-s32 device add 0 midi-out
-s32 device param set 0 2 169=74 161=0 163=12 164=20 165=6
-s32 device list 0
+s32 device list 1
+s32 device add 1 clock
+s32 device add 1 envelope
+s32 device add 1 midi-out
+s32 device param set 1 3 169=74 161=0 163=12 164=20 165=6
+s32 device list 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 device 2 param 169 (169) set
-rack 0 device 2 param 161 (161) set
-rack 0 device 2 param 163 (163) set
-rack 0 device 2 param 164 (164) set
-rack 0 device 2 param 165 (165) set
-rack 0 (id 100): 4 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=clock        id=1     params=2   Device 2
-  [2] type=envelope     id=2     params=15  Device 3
-  [3] type=midi-out     id=3     params=3   Device 4
+rack 1 device 3 param 169 (169) set
+rack 1 device 3 param 161 (161) set
+rack 1 device 3 param 163 (163) set
+rack 1 device 3 param 164 (164) set
+rack 1 device 3 param 165 (165) set
+rack 1 (id 100): 4 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=clock        id=1     params=2   Device 2
+  [3] type=envelope     id=2     params=15  Device 3
+  [4] type=midi-out     id=3     params=3   Device 4
 ```
 
 **What you hear:** with the clock running, each note pushes the cutoff (CC 74) to the top at once. Over an eighth note it falls to a fifth of the way open while you hold the key. When you let go, it closes over a sixteenth. DEST CC, DEPTH 100%, OFFSET 50% and TRIGGER MONO are the Envelope's own starting values. It sits on SYNCED, so its times follow the tempo; that is why the rack has a Clock.
@@ -369,30 +369,30 @@ In rack 1, give every note I hold its own envelope, sent as poly aftertouch: swe
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 clock
-s32 device add 0 envelope
-s32 device add 0 midi-out
-s32 device param set 0 2 171=2 168=6
-s32 device param set 0 2 161=24 163=48 164=60 165=24
-s32 device list 0
+s32 device list 1
+s32 device add 1 clock
+s32 device add 1 envelope
+s32 device add 1 midi-out
+s32 device param set 1 3 171=2 168=6
+s32 device param set 1 3 161=24 163=48 164=60 165=24
+s32 device list 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 device 2 param 171 (171) set
-rack 0 device 2 param 168 (168) set
-rack 0 device 2 param 161 (161) set
-rack 0 device 2 param 163 (163) set
-rack 0 device 2 param 164 (164) set
-rack 0 device 2 param 165 (165) set
-rack 0 (id 100): 4 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=clock        id=1     params=2   Device 2
-  [2] type=envelope     id=2     params=15  Device 3
-  [3] type=midi-out     id=3     params=3   Device 4
+rack 1 device 3 param 171 (171) set
+rack 1 device 3 param 168 (168) set
+rack 1 device 3 param 161 (161) set
+rack 1 device 3 param 163 (163) set
+rack 1 device 3 param 164 (164) set
+rack 1 device 3 param 165 (165) set
+rack 1 (id 100): 4 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=clock        id=1     params=2   Device 2
+  [3] type=envelope     id=2     params=15  Device 3
+  [4] type=midi-out     id=3     params=3   Device 4
 ```
 
 **What you hear:** with the clock running, hold a chord, then add a note. Each note's aftertouch rises over a quarter note, falls over a half note to 60% while you hold it, and fades over a quarter note after you let go of that key. The others carry on. The new note starts its own swell while the held ones stay where they are.
@@ -412,49 +412,49 @@ This needs a synth that responds to poly aftertouch, for example with poly after
 In rack 1, play a bass groove in A minor in sixteenths, and give me knob 01, named BUILD, that makes it busier.
 ```
 
-**Ids:** `<RACK_ID>` is the `id=` of rack 1 in `s32 rack list`, and `<EUCLID_ID>` is the Euclid's `id=` in `s32 device list 0`. On the simulator they are `100` and `2`. Yours differ.
+**Ids:** `<RACK_ID>` is the `id=` of rack 1 in `s32 rack list`, and `<EUCLID_ID>` is the Euclid's `id=` in `s32 device list 1`. On the simulator they are `100` and `2`. Yours differ.
 
 <!-- s32-check -->
 ```bash
-s32 device list 0
-s32 device add 0 clock
-s32 device add 0 euclid
-s32 device add 0 midi-out
-s32 device list 0
-s32 device param set 0 2 54=4 55=45 56=40 58=120
-s32 device param set 0 2 59=1 61=3 62=2 63=4 64=57 65=50 67=95
-s32 device param set 0 2 68=1 70=1 71=7 72=4 73=55 74=50 76=85
-s32 device param set 0 2 77=1 79=1 80=11 81=4 82=60 83=40 85=80
-s32 macro set 0 0 mode=device rack=<RACK_ID> device=<EUCLID_ID> param=61 min=3 max=9
-s32 macro set 0 1 mode=device rack=<RACK_ID> device=<EUCLID_ID> param=70 min=1 max=5
-s32 macro set 0 2 mode=device rack=<RACK_ID> device=<EUCLID_ID> param=56 min=40 max=90
-s32 potname set 0 BUILD
-s32 macro get 0 0
-s32 macro get 0 1
-s32 macro get 0 2
-s32 knobmap get 0
+s32 device list 1
+s32 device add 1 clock
+s32 device add 1 euclid
+s32 device add 1 midi-out
+s32 device list 1
+s32 device param set 1 3 54=4 55=45 56=40 58=120
+s32 device param set 1 3 59=1 61=3 62=2 63=4 64=57 65=50 67=95
+s32 device param set 1 3 68=1 70=1 71=7 72=4 73=55 74=50 76=85
+s32 device param set 1 3 77=1 79=1 80=11 81=4 82=60 83=40 85=80
+s32 macro set 1 1 mode=device rack=<RACK_ID> device=<EUCLID_ID> param=61 min=3 max=9
+s32 macro set 1 2 mode=device rack=<RACK_ID> device=<EUCLID_ID> param=70 min=1 max=5
+s32 macro set 1 3 mode=device rack=<RACK_ID> device=<EUCLID_ID> param=56 min=40 max=90
+s32 potname set 1 BUILD
+s32 macro get 1 1
+s32 macro get 1 2
+s32 macro get 1 3
+s32 knobmap get 1
 ```
 
 **Output**
 
 <!-- s32-output -->
 ```text
-rack 0 (id 100): 4 device(s)
-  [0] type=midi-in      id=1000  params=3   Device 1
-  [1] type=clock        id=1     params=2   Device 2
-  [2] type=euclid       id=2     params=37  Device 3
-  [3] type=midi-out     id=3     params=3   Device 4
-rack 0 device 2 param 56 (56) = 40.000 (0.000..200.000)
-rack 0 device 2 param 61 (61) = 3.000 (1.000..16.000)
-rack 0 device 2 param 70 (70) = 1.000 (1.000..16.000)
-macro 0/0 updated
-macro 0/1 updated
-macro 0/2 updated
-pot 0 renamed
-pot 0 macro 0: mode=device rack=100 device=2 param=61
-pot 0 macro 1: mode=device rack=100 device=2 param=70
-pot 0 macro 2: mode=device rack=100 device=2 param=56
-  pot  0 BUILD            macro0 mode=device msb=0
+rack 1 (id 100): 4 device(s)
+  [1] type=midi-in      id=1000  params=3   Device 1
+  [2] type=clock        id=1     params=2   Device 2
+  [3] type=euclid       id=2     params=37  Device 3
+  [4] type=midi-out     id=3     params=3   Device 4
+rack 1 device 3 param 56 (56) = 40.000 (0.000..200.000)
+rack 1 device 3 param 61 (61) = 3.000 (1.000..16.000)
+rack 1 device 3 param 70 (70) = 1.000 (1.000..16.000)
+macro 1/1 updated
+macro 1/2 updated
+macro 1/3 updated
+pot 1 renamed
+pot 1 macro 1: mode=device rack=100 device=2 param=61
+pot 1 macro 2: mode=device rack=100 device=2 param=70
+pot 1 macro 3: mode=device rack=100 device=2 param=56
+  pot  1 BUILD            macro1 mode=device msb=0
 ```
 
 **What you hear:** start the clock and a bass line plays by itself, nothing played in. The Euclid's four layers each place a few notes on a 16-step bar, one step per sixteenth: layer 1 the root A2 on every beat, layer 2 the octave A3, layer 3 the minor seventh G3, layer 4 a single C4 near the end of the bar. With knob 01 left the groove is tight: the root on the beats, short, with a few octave pops. Turning it right adds octave and seventh hits and lengthens the root notes, until the line is busy and interlocking. `macro get` prints a parameter by its number: `61` is layer 2 PULSES, `70` is layer 3 PULSES and `56` is layer 1 GATE.

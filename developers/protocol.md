@@ -31,4 +31,8 @@ s32 layout --emit-layout-json layout.json
 
 `hello` also reports a capability mask. Bit 19 (`524288`) means the device enforces the panel's one-mapping rule: a mapping write from the editor replaces the parameter's other knob or MIDI mapping.
 
+Bit 20 (`1048576`) means CLEAR RACK resets, and DUPLICATE RACK copies, the rack's BYPASS and IN SNAPSHOT.
+
+Bit 21 (`2097152`) means the rack start rules: REMOVE never refuses the first device, a needed MIDI IN or CLOCK goes first, a top CLOCK stays on top under MOVE, a load keeps every device, and DUPLICATE RACK keeps the source order.
+
 Names such as `mode=cc`, `clockMode=internal` and `view nav racks` are s32 CLI words. On the wire they are the integers in the schema's enum tables.
