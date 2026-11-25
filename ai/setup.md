@@ -69,7 +69,7 @@ The s32 CLI is the command-line tool for the S32 MIDI controller. It talks to th
 - `s32 schema --emit-schema-json` lists every device with each parameter's id, name and range.
 - Names work for `rate`, `gate` and `port`. Every other parameter is its number: `device param set 1 2 87=4`.
 - `device add` puts a new device before MIDI OUT. If the rack already has a Clock or a MIDI OUT, do not add another.
-- A new MIDI IN or MIDI OUT uses PORT USB. `port=1` is MIDI1, `port=2` is MIDI2, `port=3` is USB HOST.
+- A new MIDI IN or MIDI OUT uses PORT USB. `port=1` is MIDI1, `port=2` is MIDI2 (MIDI OUT only: a MIDI IN stores it as MIDI1), `port=3` is USB HOST.
 - On SYNCED, times are steps of 24 per quarter note: 96 = 1/1, 48 = 1/2, 24 = 1/4, 12 = 1/8, 6 = 1/16.
 
 ## Commands that ask first

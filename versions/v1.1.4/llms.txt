@@ -1,0 +1,35 @@
+# S32 MIDI controller: s32 CLI and AI agents
+
+> s32 drives the S32 over USB from a terminal or an AI agent: projects, racks and devices, knob macros, LFOs, external MIDI maps, snapshots and the screen. Every setting is key=value. `s32 <command> --help` and `s32 commands --json` describe every command; `s32 --loopback` rehearses without hardware.
+
+Start with "Set up your agent". Close the web editor before you connect: the S32 talks to one app at a time. Rack and device ids differ on every S32: read them with `s32 rack list` and `s32 device list 1` just before you use them. Every link below, except the S32 User Manual under Optional, is a Markdown copy of a manual page.
+
+## Use the S32 with AI
+- [Overview](https://s32-manual.shik.tech/ai/index.md): what an agent can do with the S32, in three steps
+- [Set up your agent](https://s32-manual.shik.tech/ai/setup.md): the setup text, install, checks, ground rules and the s32-cli skill
+- [Prompts and examples](https://s32-manual.shik.tech/ai/prompts.md): quick starters and prompts for device chains, modulation and knob mappings, with checked commands and read-backs
+- [Change safely](https://s32-manual.shik.tech/ai/safe-changes.md): read, preview, ask, change, check; commands that ask first; exit codes; what only the panel does
+- [For agents](https://s32-manual.shik.tech/ai/for-agents.md): this index, Markdown copies, finding commands, scripts
+
+## s32 CLI
+- [Overview](https://s32-manual.shik.tech/developers/index.md): what s32 is, panel numbering from 1, key=value
+- [Install](https://s32-manual.shik.tech/developers/getting-started.md): install s32 on macOS, Linux and Windows
+- [Connect](https://s32-manual.shik.tech/developers/connecting.md): connect to an S32 and the commands that ask first
+- [Simulator and scripts](https://s32-manual.shik.tech/developers/simulator.md): --loopback, --script and repl
+
+## Commands
+- [Session](https://s32-manual.shik.tech/developers/commands/session.md): hello, status, version, help, exit codes
+- [Projects](https://s32-manual.shik.tech/developers/commands/projects.md): list, pull, push, create, load, save
+- [Macros](https://s32-manual.shik.tech/developers/commands/macros.md): knob macros, names and the knob map
+- [LFOs](https://s32-manual.shik.tech/developers/commands/lfos.md): LFO settings and assignments
+- [Racks and devices](https://s32-manual.shik.tech/developers/commands/racks.md): racks, devices and parameters
+- [Maps, meta, and globals](https://s32-manual.shik.tech/developers/commands/extmap-meta.md): external MIDI mapping, project settings, globals
+- [Snapshots](https://s32-manual.shik.tech/developers/commands/snapshots.md): snapshots, morph and Arrange
+- [View, screen, and events](https://s32-manual.shik.tech/developers/commands/view.md): menus, screenshots and the event stream
+
+## Reference
+- [Examples](https://s32-manual.shik.tech/developers/examples.md): copy-paste repl sessions for people
+- [USB protocol](https://s32-manual.shik.tech/developers/protocol.md): the editor USB protocol, for your own app
+
+## Optional
+- [S32 User Manual](https://s32-manual.shik.tech/): the S32 itself: panel, screens and devices

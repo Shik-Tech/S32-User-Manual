@@ -33,7 +33,7 @@ s32> rack set 2 bypass=on
 | `device remove RACK DEV` | Removes the device, including the first MIDI IN or CLOCK. Its LFO assignments and external MIDI mappings are removed; a knob macro on it keeps its rack and shows SET TARGET. |
 | `device move RACK FROM TO` | Reorders inside the rack. MIDI IN stays first, MIDI OUT last, and a CLOCK on top of a rack with no MIDI IN stays on top |
 | `device param get RACK DEV PARAM` | Value and range |
-| `device param set RACK DEV PARAM=VALUE [PARAM=VALUE …]` | One or more settings in one sentence. Rounded to a whole number and clamped to the range |
+| `device param set RACK DEV PARAM=VALUE [PARAM=VALUE …]` | One or more settings in one sentence. Rounded to a whole number and clamped to the range. A MIDI IN stores `port=2` as MIDI1 (the S32 has one MIDI input) |
 | `device param action RACK DEV PARAM` | Presses that row's button, like Select on the panel: `randomize` (Step Seq), `record` or `reset` (Looper), or a `PARAM` number. A normal row answers `BadRequest` |
 | `device host-device RACK DEV` | Which USB Host device a MIDI IN or MIDI OUT uses: `ALL` or a device name |
 | `device host-device RACK DEV host=all\|N\|NAME` | Picks ALL, or a device from `host-device list` by number or name. The name runs to the end of the line, so it can hold spaces |

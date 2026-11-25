@@ -16,7 +16,7 @@ Numbers match the panel: knob 01 is `1`, macro 1 is `1`, rack 1 is `1`, and a de
 |---|---|---|---|
 | Arpeggiator | RATE | `rate` | `6` = 1/16 on SYNCED (steps are 24 per quarter note: 96 = 1/1, 12 = 1/8, 6 = 1/16) |
 | Arpeggiator | GATE | `gate` | % of the step, 10–200 |
-| MIDI IN, MIDI OUT | PORT | `port` | `0` USB, `1` MIDI1, `2` MIDI2, `3` USB HOST |
+| MIDI IN, MIDI OUT | PORT | `port` | `0` USB, `1` MIDI1, `2` MIDI2 (MIDI OUT only), `3` USB HOST |
 | Harmony | 1ST, 2ND | `87`, `88` | semitones, `4` = +4, `7` = +7 |
 | Scaler | KEY, QUANTIZE, SCALE | `18`, `19`, `20` | KEY `0` C … `9` A; QUANTIZE `0` DOWN; SCALE = its number in the Scaler's list (`2` MAJOR, `5` PENTATONIC MINOR) |
 | Seed | RATE, ROOT NOTE | `rate`, `154` | RATE `6` = 1/8; ROOT NOTE is a MIDI note, `57` = the A below middle C |

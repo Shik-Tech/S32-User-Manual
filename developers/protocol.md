@@ -35,4 +35,8 @@ Bit 20 (`1048576`) means CLEAR RACK resets, and DUPLICATE RACK copies, the rack'
 
 Bit 21 (`2097152`) means the rack start rules: REMOVE never refuses the first device, a needed MIDI IN or CLOCK goes first, a top CLOCK stays on top under MOVE, a load keeps every device, and DUPLICATE RACK keeps the source order.
 
+Bit 22 (`4194304`) means a Step Seq step changed on the S32 is reported as an event; re-read the pattern when it arrives.
+
+Bit 23 (`8388608`) means `view nav` (and the editor's "show on the S32") can open a Step Seq or Euclid setting row, or focus a step or layer: `row=`, `step=` and `layer=` need this bit.
+
 Names such as `mode=cc`, `clockMode=internal` and `view nav racks` are s32 CLI words. On the wire they are the integers in the schema's enum tables.

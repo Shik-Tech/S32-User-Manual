@@ -14,7 +14,7 @@ s32 --loopback watch 2000
 | Command | What it does |
 |---------|--------------|
 | `view state` | The screen, highlighted row, Back depth and context (rack, device, knob, macro, bank) |
-| `view nav MENU [RACK [DEVICE]] [index=N]` | Opens a screen. `RACK` (`1`–`8`) and `DEVICE` (`1`–`10`) pick the rack and device it shows, or `none`. `index=N` highlights row `N` (from `1`) |
+| `view nav MENU [RACK [DEVICE]] [index=N\|row=N\|step=N\|layer=N]` | Opens a screen. `RACK` (`1`–`8`) and `DEVICE` (`1`–`10`) pick the rack and device it shows, or `none`. `index=N` highlights row `N` (from `1`); on a Step Seq or Euclid, `row=N` opens its **SETTINGS** row, `step=N` a Step Seq step and `layer=N` a Euclid layer (one target key per line) |
 | `view index N` | Moves the highlight to row `N` (from `1`) |
 | `view back` | Like pressing **Back** once |
 
@@ -24,9 +24,13 @@ s32 --loopback watch 2000
 s32 --loopback view nav perform
 s32 --loopback view nav s32-lfo index=3
 s32 --loopback view nav device-params 1 2
+s32 --loopback view nav device-params 1 2 row=3
+s32 --loopback view nav device-params 1 3 layer=2
 ```
 
 `view nav device-params 1 2` opens rack 1, device 2. `index=` is the row, never the LFO, rack or device.
+
+`row=`, `step=` and `layer=` land where the editor's "show on the S32" lands: `row=3` opens the Step Seq **RATE** row (BYPASS is `row=1`), `step=4` focuses step 4 on the Step Seq grid, `layer=2` focuses Euclid layer 2. They apply also when that screen is already open, and need firmware 1.1.4 or later (`s32 hello` prints `navTarget yes`); an older S32 answers `this S32 cannot open a setting row (firmware 1.1.4 or later)`. Use one of `index=`, `row=`, `step=`, `layer=` on a line.
 
 Screens `view nav` opens:
 
@@ -42,7 +46,7 @@ Other screens (Arrange, editors, text entry) stay on the panel. Rename, add devi
 
 ## Events
 
-`watch [MS]` prints events for `MS` milliseconds (default 5000), including any queued by earlier commands in the same run. On `--usb`, turn a knob while it runs to see it.
+`watch [MS]` prints events for `MS` milliseconds (default 5000), including any queued by earlier commands in the same run. On `--usb`, turn a knob while it runs to see it, or change a Step Seq step on the panel: `EVT_STEPSEQ_PATTERN_CHANGED rack=1 device=2` says the editor should re-read that pattern.
 
 ## JSON
 
