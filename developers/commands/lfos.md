@@ -55,7 +55,7 @@ For `device` and `lfo` targets, `min` and `max` are values in the target's own r
 
 A time that changes with SYNC (Delay `delay-time`, Arpeggiator `rate`, Envelope `attack` / `hold` / `decay` / `release`) is the exception: `min` and `max` are positions from `0` to `1` of the range it has in its current mode, so the row keeps working when SYNC changes. `lfo assign list` prints them that way (`range=0.250..0.750`). A value above `1` is read in the current unit (ticks or ms) and stored as its position: `min=6 max=96` on a SYNCED Arpeggiator is `1/16` … `1/1`.
 
-For `macro` targets, `min` and `max` are the BELOW and ABOVE window around the knob, as fractions of the macro's range from `-1` to `1`. The default is `-0.5` / `0.5`. `min=0 max=0.4` only rises above the knob. Capability bit `1024` in `hello` means the firmware uses this window.
+For `macro` targets, `min` and `max` are the BELOW and ABOVE window around the knob, as fractions of the macro's range from `-1` to `1`. The default is `-0.5` / `0.5`. `min=0 max=0.4` only rises above the knob. Protocol 5 (`hello` shows it) uses this window, and so does capability bit `1024` on protocol 4.
 
 ## Output after a set
 

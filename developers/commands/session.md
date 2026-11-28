@@ -10,8 +10,9 @@ s32 --loopback reset
 
 | Command | What it does |
 |---------|--------------|
-| `hello` | Protocol and firmware versions, capability bits, `usbBudget` (what the USB-C port may draw: `DEFAULT`, `1.5A`, `3.0A`), serial number, limits (knobs, macros, racks, LFOs, snapshots, screen size) |
+| `hello` | Protocol and firmware versions, capability bits, the named feature lines (for example `navTarget` and `stepFieldNav`, which says whether `view nav … step=N field=NAME` works), `presence` (what is attached right now: microSD card bit 0; bit 1 is reserved), `usbBudget` (what the USB-C port may draw: `DEFAULT`, `1.5A`, `3.0A`), serial number, limits (knobs, macros, racks, LFOs, snapshots, screen size) |
 | `ping` | Empty round trip. The interface is alive |
+| `doctor` | Checks the first connection step by step (the s32 CLI, the S32 on USB, USB access, the S32's answer, the editor protocol) and gives one next step for the step that fails. Reads only |
 | `reset` | Stops any open push or pull, clears queued events, subscribes again |
 | `job [HANDLE]` | Status of a storage job (save, load, copy). No handle: the last job. `Busy` means ask again |
 | `abort` | Stops an open `push`. Safe when nothing is being written |
@@ -41,7 +42,7 @@ Help comes from the same declarations that check your input, so a key listed in 
 | `0` | OK |
 | `1` | Local file or OS error: a script, input or output file on this computer |
 | `2` | Usage: unknown command or key, a missing or malformed argument |
-| `3` | Link: no reply (`timed out`), a malformed reply, USB lost, or the s32 CLI and your S32's firmware speak different editor protocols |
+| `3` | Link: no reply (`timed out`), a malformed reply, USB lost, no S32 found on USB, USB not available, access denied, another program using the S32, or the s32 CLI and your S32's firmware speak different editor protocols |
 | `4` | Refused: the S32 answered with a status (`NotFound`, `Busy`, ...), the target does not exist, or the S32 was edited (panel or web editor) while s32 read a list |
 | `5` | Not confirmed: a command that asks first ran without `--yes` and no terminal, or you answered no |
 
@@ -56,12 +57,55 @@ s32 macor get 4 1
 When the s32 CLI and your S32's firmware speak different editor protocols, the error names the older side and says how to update it. The numbers are the editor protocol of each side:
 
 ```text
-error: the s32 command-line tool is older than your S32's firmware (the tool speaks editor protocol 4, your S32 speaks 5)
+error: the s32 command-line tool is older than your S32's firmware (the tool speaks editor protocol 5, your S32 speaks 6)
 next: update the s32 command-line tool: run the one-line install again (https://s32-manual.shik.tech/developers/getting-started)
 
-error: your S32's firmware is older than the s32 command-line tool (your S32 speaks editor protocol 3, the tool speaks 4)
+error: your S32's firmware is older than the s32 command-line tool (your S32 speaks editor protocol 3, the tool speaks 5)
 next: update your S32's firmware: SETTINGS > FIRMWARE > FIRMWARE UPDATE (https://shik.tech/support/manuals-firmware/)
+
+The tool speaks 4 as well, so a S32 on protocol 4 (firmware 1.1.0-1.1.4) is not refused: the two sides agree on 4 and every command works.
 ```
+
+## Doctor
+
+`s32 doctor` checks the first connection in five steps and prints one line per check:
+
+```text
+ok    cli       s32 2.0.1, editor protocol 5 (also 4), USB yes
+ok    device    S32 found on USB (0483:a56e)
+ok    access    editor interface claimed
+ok    hello     serial A0A1A2A3A4A5A6A7A8A9AAAB, firmware 1.1.4
+ok    protocol  editor protocol 5
+```
+
+| Check | Passes when |
+|-------|-------------|
+| `cli` | this s32 CLI has USB support |
+| `device` | an S32 (`0483:a56e`) with the editor interface is on USB. Two or more: `<n> S32s found on USB; using the first` |
+| `access` | the editor interface opens and is claimed |
+| `hello` | the S32 answers HELLO, including an answer that rejects the editor protocol |
+| `protocol` | the answer is on a protocol this s32 CLI speaks: `editor protocol 5`, or `editor protocol 4 (older firmware: some commands need a newer firmware)` |
+
+It stops at the first failure. The checks after it print `skip` with `needs the check above`, stderr gets the usual `error:` and `next:` pair, and the exit code is 3. The failing line carries no next step; the `next:` line does. It reads only — HELLO, and the resync bytes every run sends first. It never writes and never falls back to the simulator. Every other command's USB failure ends with `; run 's32 doctor' for details`.
+
+| What failed | The failing line | `next:` |
+|-------------|------------------|---------|
+| this build has no USB support | `no USB support in this s32` | install the s32 CLI with the one-line install |
+| USB is not available to this program (`libusb: <NAME>`) | `USB is not available to this program` | an AI agent's sandbox can block USB: ask to run the s32 CLI outside the sandbox; on Linux, check that libusb-1.0 is installed |
+| no S32 on USB | `no S32 found on USB` | connect the S32 with a data USB cable, turn it on and close the web editor; a sandbox may hide USB devices |
+| an S32 whose firmware has no editor interface | `S32 found, but its firmware has no editor interface` | update your S32's firmware: `SETTINGS > FIRMWARE > FIRMWARE UPDATE` |
+| another program holds the interface (`BUSY`) | `another program is using the S32` | close the web editor and any other s32 CLI session |
+| `ACCESS` on Linux | `access denied` | install the S32 USB rule (the one-line install prints the commands) and close the web editor |
+| `ACCESS` on macOS or Windows | `access denied` | close the web editor and any other s32 CLI session; a sandbox may block USB |
+| any other open or claim error | `could not open the S32` | unplug the S32, plug it in again and close the web editor |
+| no answer to HELLO | `no answer` | unplug the S32 and plug it in again |
+| a protocol this s32 CLI cannot speak | `editor protocol <d>, this s32 speaks 4 and 5` | the [version-mismatch line](#exit-codes) of your case, unchanged |
+
+What your computer lets it tell apart: on Linux a missing USB rule and an interface another program holds are different (`access denied` and `another program is using the S32`). On macOS and Windows another program is expected to look like `access denied`, because the interface is opened exclusively. A sandbox that hides USB and an unplugged S32 look the same, and a sandbox that denies access and a missing rule look the same: the `next:` line names both and never guesses.
+
+With `--loopback` the first line says the checks say nothing about your S32: `cli` is `ok`, `device` and `access` are `skip`, and `hello` and `protocol` run against the simulator. The exit code is 0.
+
+`--json` prints one object with `ok`, `link` (`usb` or `loopback`) and the five `checks` (`name`, `result`, `text`, `next`), also when a check fails; the error object on stderr then carries the same `next`. `doctor` runs on its own command line: it is a usage error in a `--script` or `repl` line, and `--dry-run` is refused like on every command that changes nothing.
 
 ## Quiet
 

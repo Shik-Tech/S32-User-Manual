@@ -2,7 +2,9 @@
 
 ## `--loopback`
 
-`--loopback` runs the same protocol against a simulated S32 inside the s32 CLI process. No hardware needed. Use it to try commands, write examples and run CI.
+`--loopback` runs the same protocol against a simulated S32 inside the s32 CLI process. No hardware needed. Use it to try commands, write examples and run CI. The s32 CLI never picks the simulator on its own: without `--loopback` it talks to your S32 on USB.
+
+Every `--loopback` run prints `note: using the s32 simulator (--loopback), not your S32` on stderr; `-q` and `--json` leave it out.
 
 - **Every run starts fresh** with three projects (Project 1–3) and one card project. A `macro set` in one run is gone in the next. Chain steps in a [REPL](./getting-started.md#interactive-session) or a script.
 - **Real devices.** Every device type with its real parameters, defaults and ranges, as `schema --emit-schema-json` lists them. Values are rounded and clamped to each parameter's range, as on the S32. A range that follows a device's SYNC setting (Arpeggiator RATE, Delay DELAY TIME) is the full range here.

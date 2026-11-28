@@ -4,8 +4,8 @@ The **s32 CLI** drives the S32 from a terminal or a script: pull and push projec
 
 | | |
 |---|---|
-| CLI | `s32` 2.0.1 |
-| Protocol | 4 |
+| CLI | `s32` 2.1.0 |
+| Protocol | 5 |
 | Firmware | the version in the site header |
 
 The s32 CLI talks to the **S32 Editor** USB interface, the same one the [web editor](https://editor.shik.tech) uses. It is not USB MIDI and not the USB drive. Actions that only work on the panel (format, firmware update, text entry) stay on the panel.

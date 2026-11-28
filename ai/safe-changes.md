@@ -87,7 +87,7 @@ did you mean: bypass=
 
 ## What the CLI cannot do
 
-Some things happen on the S32 panel only: firmware update, formatting, compacting or migrating storage, pressing panel buttons, and turning ARRANGE on. The CLI and the web editor use the same USB connection, so only one app at a time can be connected.
+Some things happen on the S32 panel only: [firmware update](../settings/#update-firmware), formatting, compacting or migrating storage, pressing panel buttons, and turning ARRANGE on. The CLI and the web editor use the same USB connection, so only one app at a time can be connected.
 
 
 - [Overview](./index.md) — What an agent can do with your S32, in three steps

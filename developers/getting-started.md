@@ -1,6 +1,6 @@
 # Install
 
-s32 **2.0.1** speaks protocol 4. One line installs it; no download page, and no `sudo` for the CLI itself.
+s32 **2.1.0** speaks protocol 5. One line installs it; no download page, and no `sudo` for the CLI itself.
 
 ## macOS
 
@@ -99,7 +99,7 @@ s32 hello
 s32 ping
 ```
 
-Without an S32 plugged in, the s32 CLI uses its built-in simulator ([Connect](./connecting.md)). `hello` prints the protocol and firmware versions, the serial number and the S32's limits.
+Without an S32 plugged in, these commands stop with `no S32 found on USB` (exit code 3). To try them without the S32, add `--loopback` ([Simulator and scripts](./simulator.md)). `hello` prints the protocol and firmware versions, the serial number and the S32's limits.
 
 ## Help and completion
 
